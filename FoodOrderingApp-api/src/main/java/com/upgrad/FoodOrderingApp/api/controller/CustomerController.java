@@ -24,4 +24,39 @@ import java.util.List;
 @RequestMapping("/")
 public class CustomerController {
 
+
+    @Autowired private CustomerService customerService;
+
+    /**
+     * API to register a new customer
+     *
+     * @param signupCustomerRequest argument to get essential customer information
+     * @return ResponseEntity<SignupCustomerResponse> return type to share result and valid code
+     * @throws SignUpRestrictedException exception handling
+     */
+    @CrossOrigin
+    @RequestMapping(
+            method = RequestMethod.POST,
+            path = "/customer/signup",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<SignupCustomerResponse> signup(
+            @RequestBody(required = true) final SignupCustomerRequest signupCustomerRequest)
+            throws SignUpRestrictedException {
+        CustomerEntity customerEntity = new CustomerEntity();
+        customerEntity.setFirstName(signupCustomerRequest.getFirstName());
+        customerEntity.setLastName(signupCustomerRequest.getLastName());
+        customerEntity.setPassword(signupCustomerRequest.getPassword());
+        customerEntity.setContactNumber(signupCustomerRequest.getContactNumber());
+        customerEntity.setEmailAddress(signupCustomerRequest.getEmailAddress());
+
+        CustomerEntity registeredCustomerEntity = customerService.persistCustomer(customerEntity);
+
+        SignupCustomerResponse customerResponse =
+                new SignupCustomerResponse()
+                        .id(registeredCustomerEntity.getUuid())
+                        .status("CUSTOMER SUCCESSFULLY REGISTERED");
+        return new ResponseEntity<SignupCustomerResponse>(customerResponse, HttpStatus.CREATED);
+    }
+
 }
