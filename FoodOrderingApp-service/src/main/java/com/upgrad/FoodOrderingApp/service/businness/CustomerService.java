@@ -5,7 +5,6 @@ import com.upgrad.FoodOrderingApp.service.entity.CustomerAuthEntity;
 import com.upgrad.FoodOrderingApp.service.exception.AuthenticationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.UpdateCustomerException;
-import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.upgrad.FoodOrderingApp.service.dao.CustomerDao;
@@ -16,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class CustomerService {
@@ -190,11 +191,13 @@ public class CustomerService {
         return cusDao.getCustomerByContactNumber(contactNumber) != null;
     }
 
-    // method checks for format of the email is correct or not using EmailValidator
     private boolean isValidEmail(final String emailAddress) {
-        EmailValidator validator = EmailValidator.getInstance();
-        return validator.isValid(emailAddress);
-    }
+            String regex = "^(.+)@(.+)$";
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(emailAddress);
+            return matcher.matches();
+        }
+
 
     // method checks for given contact number is valid or not
     private boolean isValidContactNumber(final String contactNumber) {
