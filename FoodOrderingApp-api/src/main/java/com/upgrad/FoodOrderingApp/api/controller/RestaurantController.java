@@ -221,9 +221,9 @@ public class RestaurantController {
 
     restaurantDetailsResponse.setAveragePrice(restaurantEntity.getAvgPrice());
     restaurantDetailsResponse.setCustomerRating(
+            BigDecimal.valueOf(restaurantEntity.getCustomerRating()));
     restaurantDetailsResponse.setAddress(restaurantDetailsResponseAddress);
 
-        BigDecimal.valueOf(restaurantEntity.getCustomerRating()));
 
     restaurantDetailsResponse.setPhotoURL(restaurantEntity.getPhotoUrl());
     restaurantDetailsResponse.setRestaurantName(restaurantEntity.getRestaurantName());
