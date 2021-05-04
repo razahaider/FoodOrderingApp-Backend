@@ -50,7 +50,7 @@ public class CustomerController {
         customerEntity.setContactNumber(signupCustomerRequest.getContactNumber());
         customerEntity.setEmailAddress(signupCustomerRequest.getEmailAddress());
 
-        CustomerEntity registeredCustomerEntity = customerService.persistCustomer(customerEntity);
+        CustomerEntity registeredCustomerEntity = customerService.saveCustomer(customerEntity);
 
         SignupCustomerResponse customerResponse =
                 new SignupCustomerResponse()
