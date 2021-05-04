@@ -7,8 +7,47 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
-/** This class provides the database access for all the endpoints in the customer controller. */
 @Repository
 public class CustomerDao {
 
+    @PersistenceContext private EntityManager entityManager;
+
+    /**
+     *
+     *
+     * @param customerEntity for creating new customer.
+     * @return CustomerEntity object.
+     */
+    public CustomerEntity saveCustomer(final CustomerEntity customerEntity) {
+        entityManager.persist(customerEntity);
+        return customerEntity;
+    }
+
+    /**
+     *
+     *
+     * @param contactNumber already registered with this number
+     * @return CustomerEntity number exists in the database
+     */
+    public CustomerEntity getCustomerByContactNumber(final String contactNumber) {
+        try {
+            return entityManager
+                    .createNamedQuery("customerByContactNumber", CustomerEntity.class)
+                    .setParameter("contactNumber", contactNumber)
+                    .getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
+
+    /**
+     *
+     *
+     * @param customerEntity update.
+     * @return Updated  object.
+     */
+    public CustomerEntity updateCustomer(final CustomerEntity customerEntity) {
+        entityManager.merge(customerEntity);
+        return customerEntity;
+    }
 }
