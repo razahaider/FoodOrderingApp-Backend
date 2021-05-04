@@ -186,7 +186,7 @@ public class CustomerController {
      * @return ResponseEntity<UpdatePasswordResponse> result with http status
      * @throws AuthorizationFailedException failing authorisation handling
      * @throws UpdateCustomerException handling any failed validations
-     */
+
     @CrossOrigin
     @RequestMapping(
             method = RequestMethod.PUT,
@@ -225,4 +225,5 @@ public class CustomerController {
             throw new UpdateCustomerException("UCR-003", "No field should be empty");
         }
     }
+    */
 }

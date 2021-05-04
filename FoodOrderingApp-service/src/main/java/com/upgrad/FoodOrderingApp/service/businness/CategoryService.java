@@ -44,10 +44,11 @@ public class CategoryService {
    *
    * @param restaurantUuid
    * @return  CategoryEntity
-   */
+
   public List<CategoryEntity> getCategoriesByRestaurant(final String restaurantUuid) {
     List<CategoryEntity> categoryEntities = categoryDao.getCategoriesByRestaurant(restaurantUuid);
 
     return categoryEntities;
   }
+  */
 }

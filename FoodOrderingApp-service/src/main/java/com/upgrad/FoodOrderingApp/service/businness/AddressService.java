@@ -141,7 +141,7 @@ public class AddressService {
      * @param stateUuid
      * @return StateEntity object.
      * @throws AddressNotFoundException
-     */
+
     public StateEntity getStateByUUID(final String stateUuid) throws AddressNotFoundException {
         if (stateDao.getStateByUUID(stateUuid) == null) {
             throw new AddressNotFoundException("ANF-002", "No state by this id");
@@ -161,4 +161,5 @@ public class AddressService {
         }
         return true;
     }
+     */
 }
