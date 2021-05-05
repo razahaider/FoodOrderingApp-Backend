@@ -14,12 +14,7 @@ import com.upgrad.FoodOrderingApp.api.model.OrderListCustomer;
 import com.upgrad.FoodOrderingApp.api.model.OrderListPayment;
 import com.upgrad.FoodOrderingApp.api.model.SaveOrderRequest;
 import com.upgrad.FoodOrderingApp.api.model.SaveOrderResponse;
-import com.upgrad.FoodOrderingApp.service.businness.AddressService;
-import com.upgrad.FoodOrderingApp.service.businness.CustomerService;
-import com.upgrad.FoodOrderingApp.service.businness.ItemService;
-import com.upgrad.FoodOrderingApp.service.businness.OrderService;
-import com.upgrad.FoodOrderingApp.service.businness.PaymentService;
-import com.upgrad.FoodOrderingApp.service.businness.RestaurantService;
+import com.upgrad.FoodOrderingApp.service.businness.*;
 import com.upgrad.FoodOrderingApp.service.entity.AddressEntity;
 import com.upgrad.FoodOrderingApp.service.entity.CouponEntity;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
@@ -51,24 +46,32 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/")
 public class OrderController {
 
-    @Autowired private OrderService orderService;
+    private final OrderService orderService;
 
-    @Autowired private PaymentService paymentService;
+    private final PaymentService paymentService;
 
-    @Autowired private RestaurantService restaurantService;
+    private final RestaurantService restaurantService;
 
-    @Autowired private ItemService itemService;
+    private final ItemService itemService;
 
-    @Autowired private CustomerService customerService;
+    private final CustomerService customerService;
 
-    @Autowired private AddressService addressService;
+    private final AddressService addressService;
+
+    public OrderController(OrderService orderService, PaymentService paymentService, RestaurantService restaurantService, ItemService itemService, CustomerService customerService, AddressService addressService) {
+        this.orderService = orderService;
+        this.paymentService = paymentService;
+        this.restaurantService = restaurantService;
+        this.itemService = itemService;
+        this.customerService = customerService;
+        this.addressService = addressService;
+    }
 
     /**
      *
