@@ -165,7 +165,7 @@ public class CustomerService {
      * @param customerEntity CustomerEntity object to update the password.
      * @return Updated CustomerEntity object.
      * @throws UpdateCustomerException If any of the validation for old or new password fails.
-
+     */
     @Transactional(propagation = Propagation.REQUIRED)
     public CustomerEntity updateCustomerPassword(
             final String oldPassword, final String newPassword, final CustomerEntity customerEntity)
@@ -185,18 +185,20 @@ public class CustomerService {
         }
     }
 
+    // method checks for given contact number is already registered or not
     private boolean isNewContactNumber(final String contactNumber) {
         return cusDao.getCustomerByContactNumber(contactNumber) != null;
     }
 
     private boolean isValidEmail(final String emailAddress) {
-            String regex = "^(.+)@(.+)$";
-            Pattern pattern = Pattern.compile(regex);
-            Matcher matcher = pattern.matcher(emailAddress);
-            return matcher.matches();
-        }
+        String regex = "^(.+)@(.+)$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(emailAddress);
+        return matcher.matches();
+    }
 
 
+    // method checks for given contact number is valid or not
     private boolean isValidContactNumber(final String contactNumber) {
         if (contactNumber.length() != 10) {
             return false;
@@ -209,8 +211,8 @@ public class CustomerService {
         return true;
     }
 
+    // method checks for given password meets the requirements or not
     private boolean isValidPassword(final String password) {
         return password.matches("^(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[#@$%&*!^]).{8,}$");
     }
-    */
 }
