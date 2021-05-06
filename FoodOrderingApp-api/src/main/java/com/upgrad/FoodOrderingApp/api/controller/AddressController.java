@@ -146,7 +146,7 @@ public class AddressController {
      * retrieve all the states
      *
      * @return ResponseEntity<StatesListResponse>
-
+     */
     @CrossOrigin
     @RequestMapping(
             method = RequestMethod.GET,
@@ -170,5 +170,4 @@ public class AddressController {
         }
         return new ResponseEntity<StatesListResponse>(statesListResponse, HttpStatus.OK);
     }
-     */
 }
