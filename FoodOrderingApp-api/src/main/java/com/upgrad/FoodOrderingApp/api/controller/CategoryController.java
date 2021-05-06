@@ -61,7 +61,7 @@ public class CategoryController {
    * @return CategoryDetailsResponse
    * @throws CategoryNotFoundException UUID doesn't exist
    *
-
+   */
   @CrossOrigin
   @RequestMapping(
       method = RequestMethod.GET,
@@ -96,5 +96,4 @@ public class CategoryController {
 
     return new ResponseEntity<CategoryDetailsResponse>(categoryDetailsResponse, HttpStatus.OK);
   }
-  */
 }
