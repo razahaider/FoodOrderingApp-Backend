@@ -43,20 +43,29 @@ public class CustomerController {
     public ResponseEntity<SignupCustomerResponse> signup(
             @RequestBody(required = true) final SignupCustomerRequest signupCustomerRequest)
             throws SignUpRestrictedException {
-        CustomerEntity customerEntity = new CustomerEntity();
-        customerEntity.setFirstName(signupCustomerRequest.getFirstName());
-        customerEntity.setLastName(signupCustomerRequest.getLastName());
-        customerEntity.setPassword(signupCustomerRequest.getPassword());
-        customerEntity.setContactNumber(signupCustomerRequest.getContactNumber());
-        customerEntity.setEmailAddress(signupCustomerRequest.getEmailAddress());
 
-        CustomerEntity registeredCustomerEntity = customerService.saveCustomer(customerEntity);
+            CustomerEntity customerEntity = new CustomerEntity();
+            customerEntity.setFirstName(signupCustomerRequest.getFirstName());
+            customerEntity.setLastName(signupCustomerRequest.getLastName());
+            customerEntity.setEmailAddress(signupCustomerRequest.getEmailAddress());
+            customerEntity.setContactNumber(signupCustomerRequest.getContactNumber());
+            customerEntity.setPassword(signupCustomerRequest.getPassword());
+        if (
+                !customerEntity.getEmailAddress().isEmpty()  &&
+                        !customerEntity.getFirstName().isEmpty() &&
+                        !customerEntity.getContactNumber().isEmpty()
+                        && !customerEntity.getPassword().isEmpty()) {
+            CustomerEntity createdCustomerEntity = customerService.saveCustomer(customerEntity);
 
-        SignupCustomerResponse customerResponse =
-                new SignupCustomerResponse()
-                        .id(registeredCustomerEntity.getUuid())
-                        .status("CUSTOMER SUCCESSFULLY REGISTERED");
-        return new ResponseEntity<SignupCustomerResponse>(customerResponse, HttpStatus.CREATED);
+            SignupCustomerResponse customerResponse =
+                    new SignupCustomerResponse()
+                            .id(createdCustomerEntity.getUuid())
+                            .status("CUSTOMER SUCCESSFULLY REGISTERED");
+            return new ResponseEntity<SignupCustomerResponse>(customerResponse, HttpStatus.CREATED);
+        } else {
+            throw new SignUpRestrictedException(
+                    "SGR-005", "Except last name all fields should be filled");
+        }
     }
 
 
@@ -140,7 +149,7 @@ public class CustomerController {
      * API representing customer portal
      *
      * @param updateCustomerRequest update information of customer
-     * @param authStr to authorise the customer
+     * @param authorization to authorise the customer
      * @return ResponseEntity<UpdateCustomerResponse> result with HTTP status
      * @throws AuthorizationFailedException for failed authorisation
      * @throws UpdateCustomerException for failed validations
@@ -152,33 +161,31 @@ public class CustomerController {
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<UpdateCustomerResponse> update(
-            @RequestHeader("authorization") final String authStr,
+            @RequestHeader("authorization") final String authorization,
             @RequestBody(required = true) final UpdateCustomerRequest updateCustomerRequest)
             throws UpdateCustomerException, AuthorizationFailedException {
-        if (updateCustomerRequest.getFirstName() != null
-               && updateCustomerRequest.getFirstName().isEmpty()) {
-
-
-            String accessToken = Utility.getTokenFromAuthorization(authStr);
-
-            CustomerEntity cusEntity = customerService.getCustomer(accessToken);
-            cusEntity.setFirstName(updateCustomerRequest.getFirstName());
-            cusEntity.setLastName(updateCustomerRequest.getLastName());
-
-            CustomerEntity updatedCusEntity = customerService.updateCustomer(cusEntity);
-
-            UpdateCustomerResponse updateCustomerResponse = new UpdateCustomerResponse();
-            updateCustomerResponse.setFirstName(updatedCusEntity.getFirstName());
-            updateCustomerResponse.setLastName(updatedCusEntity.getLastName());
-            updateCustomerResponse.setId(updatedCusEntity.getUuid());
-            updateCustomerResponse.status("CUSTOMER DETAILS UPDATED SUCCESSFULLY");
-
-            return new ResponseEntity<UpdateCustomerResponse>(updateCustomerResponse, HttpStatus.OK);
-        }else{
+        if (updateCustomerRequest.getFirstName() == null
+                || updateCustomerRequest.getFirstName().isEmpty()) {
             throw new UpdateCustomerException("UCR-002", "First name field should not be empty");
-
         }
+
+        String accessToken = Utility.getTokenFromAuthorization(authorization);
+
+        CustomerEntity customerEntity = customerService.getCustomer(accessToken);
+        customerEntity.setFirstName(updateCustomerRequest.getFirstName());
+        customerEntity.setLastName(updateCustomerRequest.getLastName());
+
+        CustomerEntity updatedCustomerEntity = customerService.updateCustomer(customerEntity);
+
+        UpdateCustomerResponse updateCustomerResponse = new UpdateCustomerResponse();
+        updateCustomerResponse.setId(updatedCustomerEntity.getUuid());
+        updateCustomerResponse.setFirstName(updatedCustomerEntity.getFirstName());
+        updateCustomerResponse.setLastName(updatedCustomerEntity.getLastName());
+        updateCustomerResponse.status("CUSTOMER DETAILS UPDATED SUCCESSFULLY");
+
+        return new ResponseEntity<UpdateCustomerResponse>(updateCustomerResponse, HttpStatus.OK);
     }
+
 
     /**
      * @param updatePasswordRequest contains information about customer password updates
