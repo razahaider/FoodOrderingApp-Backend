@@ -175,13 +175,14 @@ public class OrderController {
         String accessToken = Utility.getTokenFromAuthorization(authorization);
 
 
+        // Identify customer from the access token.
         CustomerEntity customerEntity = customerService.getCustomer(accessToken);
-
-        PaymentEntity paymentEntity =
-                paymentService.getPaymentByUUID(saveOrderRequest.getPaymentId().toString());
 
         CouponEntity couponEntity =
                 orderService.getCouponByCouponId(saveOrderRequest.getCouponId().toString());
+
+        PaymentEntity paymentEntity =
+                paymentService.getPaymentByUUID(saveOrderRequest.getPaymentId().toString());
 
         AddressEntity addressEntity =
                 addressService.getAddressByUUID(saveOrderRequest.getAddressId(), customerEntity);
@@ -195,9 +196,9 @@ public class OrderController {
         for (ItemQuantity itemQuantity : itemQuantities) {
             ItemEntity itemEntity = itemService.getItemByUUID(itemQuantity.getItemId().toString());
             OrderItemEntity orderItem = new OrderItemEntity();
+            orderItem.setItem(itemEntity);
             orderItem.setPrice(itemQuantity.getPrice());
             orderItem.setQuantity(itemQuantity.getQuantity());
-            orderItem.setItem(itemEntity);
             orderItemEntities.add(orderItem);
         }
 
@@ -205,11 +206,11 @@ public class OrderController {
         order.setUuid(UUID.randomUUID().toString());
         order.setBill(saveOrderRequest.getBill().doubleValue());
         order.setDiscount(saveOrderRequest.getDiscount().doubleValue());
+        order.setDate(ZonedDateTime.now());
         order.setAddress(addressEntity);
         order.setCoupon(couponEntity);
         order.setPayment(paymentEntity);
         order.setRestaurant(restaurantEntity);
-        order.setDate(ZonedDateTime.now());
         order.setCustomer(customerEntity);
         order.setOrderItems(Collections.emptyList());
         order = orderService.saveOrder(order);

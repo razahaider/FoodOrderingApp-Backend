@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static java.util.UUID.fromString;
+
 @RestController
 @RequestMapping("/")
 public class RestaurantController {
@@ -161,9 +163,9 @@ public class RestaurantController {
     CustomerEntity customerEntity = customerService.getCustomer(accessToken);
     RestaurantEntity restaurantEntity = restaurantService.restaurantByUUID(restaurantUuid);
     RestaurantEntity updatedRestaurantEntity =
-        restaurantService.updateRestaurantRating(restaurantEntity, customerRating);
+            restaurantService.updateRestaurantRating(restaurantEntity, customerRating);
     RestaurantUpdatedResponse restaurantUpdatedResponse = new RestaurantUpdatedResponse();
-    restaurantUpdatedResponse.setId(UUID.fromString(updatedRestaurantEntity.getUuid()));
+    restaurantUpdatedResponse.setId(fromString(updatedRestaurantEntity.getUuid()));
     restaurantUpdatedResponse.setStatus("RESTAURANT RATING UPDATED SUCCESSFULLY");
 
     return new ResponseEntity<RestaurantUpdatedResponse>(restaurantUpdatedResponse, HttpStatus.OK);
@@ -179,7 +181,7 @@ public class RestaurantController {
     List<RestaurantList> allRestaurantsList = new ArrayList<>();
     for (RestaurantEntity restaurantEntity : allRestaurants) {
       RestaurantList restaurantList = new RestaurantList();
-      restaurantList.setId(UUID.fromString(restaurantEntity.getUuid()));
+      restaurantList.setId(fromString(restaurantEntity.getUuid()));
       RestaurantDetailsResponseAddress restaurantDetailsResponseAddress =
           createRestaurantDetailsResponseAddress(restaurantEntity.getAddress());
 
@@ -214,7 +216,7 @@ public class RestaurantController {
 
     RestaurantDetailsResponse restaurantDetailsResponse = new RestaurantDetailsResponse();
 
-    restaurantDetailsResponse.setId(UUID.fromString(restaurantEntity.getUuid()));
+    restaurantDetailsResponse.setId(fromString(restaurantEntity.getUuid()));
 
     RestaurantDetailsResponseAddress restaurantDetailsResponseAddress =
         createRestaurantDetailsResponseAddress(restaurantEntity.getAddress());
@@ -245,14 +247,14 @@ public class RestaurantController {
     RestaurantDetailsResponseAddressState restaurantDetailsResponseAddressState =
         new RestaurantDetailsResponseAddressState();
     AddressEntity addressEntity = restaurantAddress;
-    restaurantDetailsResponseAddress.setId(UUID.fromString(addressEntity.getUuid()));
+    restaurantDetailsResponseAddress.setId(fromString(addressEntity.getUuid()));
     restaurantDetailsResponseAddress.setLocality(addressEntity.getLocality());
     restaurantDetailsResponseAddress.setPincode(addressEntity.getPincode());
     restaurantDetailsResponseAddress.setFlatBuildingName(addressEntity.getFlatBuilNo());
     restaurantDetailsResponseAddress.setCity(addressEntity.getCity());
 
     restaurantDetailsResponseAddressState.setId(
-        UUID.fromString(addressEntity.getState().getUuid()));
+        fromString(addressEntity.getState().getUuid()));
     restaurantDetailsResponseAddressState.setStateName(addressEntity.getState().getStateName());
     restaurantDetailsResponseAddress.setState(restaurantDetailsResponseAddressState);
     return restaurantDetailsResponseAddress;
@@ -269,7 +271,7 @@ public class RestaurantController {
 
     for (CategoryEntity c : categories) {
       CategoryList categoryList = new CategoryList();
-      categoryList.setId(UUID.fromString(c.getUuid()));
+      categoryList.setId(fromString(c.getUuid()));
       categoryList.setCategoryName(c.getCategoryName());
       List<ItemList> allItemsInCategory =
           getAllItemsInCategoryInRestaurant(restaurantUuid, c.getUuid());
@@ -295,7 +297,7 @@ public class RestaurantController {
       ItemList itemList = new ItemList();
       itemList.setItemName(item.getItemName());
       itemList.setPrice(item.getPrice());
-      itemList.setId(UUID.fromString(item.getUuid()));
+      itemList.setId(fromString(item.getUuid()));
       if (item.getType().equals("0")) {
         itemList.setItemType(ItemList.ItemTypeEnum.valueOf("VEG"));
       } else {
